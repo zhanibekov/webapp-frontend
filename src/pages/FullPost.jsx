@@ -34,7 +34,7 @@ export const FullPost = () => {
         items={[
           {
             user: {
-              fullName: "Баукен Оспан",
+              fullName: "Лаура Аманхан",
               avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
             },
             text: "Это тестовый комментарий 5555556",
