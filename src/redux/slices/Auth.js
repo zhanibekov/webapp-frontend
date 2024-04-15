@@ -2,13 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchUserData = createAsyncThunk('auth/fetchUserData', async(params) => {
-    const { data } = await axios.post('/auth/login', params);
-    return data;
-});
+    const { data } = await axios.post('http://localhost:4444/auth/login', params);
+    return data
+})
 
-const initialState = { ///Здесь хранится информация о пользвателье/////
+const initialState = {
     data: null,
-    status: 'loading',
+    status: 'loading'
 };
 
 const authSlice = createSlice({
@@ -30,6 +30,6 @@ const authSlice = createSlice({
             state.data = null;
 
         },
-    },
-})
+    }
+});
 export const authReducer = authSlice.reducer;
