@@ -12,16 +12,24 @@ import {Navigate} from 'react-router-dom'
 export const Login = () => {
   const isAuth = useSelector(selectIsAuth)
   const dispatch = useDispatch();
-  const {register, handleSubmit, setError, formState:{errors, isValid}} = useForm({
+  const {register, handleSubmit, formState:{errors, isValid}} = useForm({
     defaultValues : {
       email: 'elamanzhanibekov@gmail.com',
       password: '870536505345',
     },
     mode: 'onChange',
   });
-  console.log(isAuth)
-  const onSubmit = (values) => {
-    dispatch(fetchUserData(values))
+  console.log(isAuth);
+
+  const onSubmit = async(values) => {
+    const data = await dispatch(fetchUserData(values));
+    if(!data.payload) {
+      return alert('Не удалось авторизоваться')
+    }
+   if('token' in data.payload) {
+    window.localStorage.setItem('token', data.payload.token);
+   }
+   console.log(data);
   }
  
     if(isAuth) {
@@ -48,7 +56,7 @@ export const Login = () => {
       helperText={errors.password?.message}
       {...register('password',{required: 'Укажите пароль'})}
       fullWidth />
-      <Button type="submit" size="large" variant="contained" fullWidth>
+      <Button disabled={!isValid} type="submit" size="large" variant="contained" fullWidth>
         Войти
       </Button>
       </form>

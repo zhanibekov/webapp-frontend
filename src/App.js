@@ -1,10 +1,18 @@
 import Container from "@mui/material/Container";
 import { Routes, Route } from 'react-router-dom'
-
+import React from "react";
 import { Header } from "./components";
 import { Home, FullPost, Registration, AddPost, Login } from "./pages";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAuthMe, selectIsAuth } from "./redux/slices/Auth";
+
 
 function App() {
+    const dispatch = useDispatch()
+    const isAuth = useSelector(selectIsAuth);
+    React.useEffect(() => {
+        dispatch(fetchAuthMe());
+    }, [dispatch]);
     return ( <
         >
         <
@@ -28,10 +36,9 @@ function App() {
         /> <
         Route path = "/register"
         element = { < Registration / > }
-        /> <
-        /Routes> <
-        /Container> <
-        />
+        /> < /
+        Routes > <
+        /Container> < / >
     );
 }
 
