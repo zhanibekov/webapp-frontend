@@ -6,16 +6,15 @@ import SimpleMDE from 'react-simplemde-editor';
 import { selectIsAuth } from "../../redux/slices/Auth";
 import { useSelector } from 'react-redux';
 
-
+import axios from '../../axios';
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
-import { Navigate } from 'react-router-dom';
-import axios from '../../axios';
-
+import { Navigate, useNavigate } from 'react-router-dom';
 export const AddPost = () => {
+  const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   const [isLoading, setLoading] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const [text, setText] = React.useState('');
   const [title, setTitle] = React.useState('');
   const [tags, setTags] = React.useState('');
   const [imageUrl, setImageUrl] = React.useState('');
@@ -23,11 +22,13 @@ export const AddPost = () => {
   const inputFileRef = React.useRef(null)
 
   const handleChangeFile = async(event) => {
+    console.log(event.target.files);
     try {
-      const formData = new FormData;
+      const formData = new FormData();
         const file = event.target.files[0];
         formData.append('image', file)
-        const {data} = await axios.post('http://localhost:4444/upload', formData);
+        const { data } = await axios.post('http://localhost:4444/upload', formData);
+        console.log(data);
         setImageUrl(data.url)
       }catch(error) {
         console.warn(error);
@@ -40,8 +41,26 @@ export const AddPost = () => {
   };
 
   const onChange = React.useCallback((value) => {
-    setValue(value);
+    setText(value);
   }, []);
+
+  const onSubmit = async() => {
+    try {
+      setLoading(true);
+      const fields = {
+        title,
+        imageUrl,
+        tags,
+        text, 
+      };
+      const { data } =  await axios.post('http://localhost:4444/posts', fields)
+      const id = data._id;
+      navigate(`/posts/${id}`)
+    } catch(err) {
+      console.warn(err);
+      alert('Ошибка при создании статьи')
+    }
+    }
 
   const options = React.useMemo(
     () => ({
@@ -58,8 +77,11 @@ export const AddPost = () => {
     [],
   );
   if (!window.localStorage.getItem('token') && !isAuth) {
-    return <Navigate to='/' />
+    return(
+      <Navigate to='/' />
+    ) 
   }
+  console.log({title, tags, text});
 
   return (
     <Paper style={{ padding: 30 }}>
@@ -90,9 +112,9 @@ export const AddPost = () => {
       value={tags}
       onChange={(e) => setTags(e.target.value)}
       classes={{ root: styles.tags }} variant="standard" placeholder="Тэги" fullWidth />
-      <SimpleMDE className={styles.editor} value={value} onChange={onChange} options={options} />
+      <SimpleMDE className={styles.editor} value={text} onChange={onChange} options={options} />
       <div className={styles.buttons}>
-        <Button size="large" variant="contained">
+        <Button onClick={onSubmit} size="large" variant="contained">
           Опубликовать
         </Button>
         <a href="/">
@@ -101,4 +123,4 @@ export const AddPost = () => {
       </div>
     </Paper>
   );
-};
+      }
