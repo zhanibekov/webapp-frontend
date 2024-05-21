@@ -4,6 +4,7 @@ import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export const FullPost = () => {
   const [data, setData] = React.useState();
@@ -39,7 +40,7 @@ export const FullPost = () => {
          commentsCount={3}
          tags={data.tags}
          isFullPost >
-        <p>{data.text}</p>
+        <ReactMarkdown children={data.text} />
       </Post>
       <CommentsBlock
         items={[
