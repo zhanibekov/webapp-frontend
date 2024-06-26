@@ -2,17 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchUserData = createAsyncThunk('auth/fetchUserData', async(params) => {
-    const { data } = await axios.post('http://localhost:4444/auth/login', params);
+    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, params);
     return data
 });
 
 export const fetchRegister = createAsyncThunk('auth/fetchRegister', async(params) => {
-    const { data } = await axios.post('http://localhost:4444/auth/register', params);
+    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, params);
     return data
 });
 
 export const fetchAuthMe = createAsyncThunk('auth/fetchAuthMe', async() => {
-    const { data } = await axios.get('http://localhost:4444/auth/me', {
+    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/auth/me`, {
         headers: {
             Authorization: localStorage.getItem("token"),
         },
