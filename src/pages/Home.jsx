@@ -74,4 +74,3 @@ export const Home = () => {
  
 };
 
-console.log(userData)
