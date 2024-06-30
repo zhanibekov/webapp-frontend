@@ -12,7 +12,7 @@ export const fetchRegister = createAsyncThunk('auth/fetchRegister', async(params
 });
 
 export const fetchAuthMe = createAsyncThunk('auth/fetchAuthMe', async() => {
-    const { data } = await axios.get('/auth/me', {
+    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/auth/me`, {
         headers: {
             Authorization: localStorage.getItem("token"),
         },
