@@ -73,4 +73,5 @@ export const Home = () => {
   );
  
 };
-console.log(_id)
+
+console.log(userData)
