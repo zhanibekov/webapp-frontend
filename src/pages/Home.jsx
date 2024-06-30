@@ -43,7 +43,6 @@ export const Home = () => {
               commentsCount={obj.commentsCount}
               tags={obj.tags}
               isEditable={userData?._id === obj.user._id}
-              
             />
           ))}
         </Grid>
@@ -72,4 +71,5 @@ export const Home = () => {
       </Grid>
     </>
   );
+  console.log(_id)
 };
