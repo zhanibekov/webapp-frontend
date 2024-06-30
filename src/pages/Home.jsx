@@ -71,5 +71,6 @@ export const Home = () => {
       </Grid>
     </>
   );
-  console.log(_id)
+ 
 };
+console.log(_id)
