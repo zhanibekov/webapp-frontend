@@ -20,6 +20,7 @@ export const AddPost = () => {
   const [tags, setTags] = React.useState('');
   const [imageUrl, setImageUrl] = React.useState('');
 
+
   const inputFileRef = React.useRef(null)
   const isEditing = Boolean(id)
 
@@ -29,7 +30,7 @@ export const AddPost = () => {
       const formData = new FormData();
         const file = event.target.files[0];
         formData.append('image', file)
-        const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/upload`, formData);
+        const { data } = await axios.post(`http://localhost:4444/upload`, formData);
         console.log(data);
         setImageUrl(data.url)
       }catch(error) {
@@ -55,9 +56,10 @@ export const AddPost = () => {
         tags: tags.split(','),
         text, 
       };
+      console.log(title)
       const { data } = isEditing
-      ? await axios.patch(`${process.env.REACT_APP_API_URL}/posts/${id}`, fields)
-      : await axios.post(`${process.env.REACT_APP_API_URL}/posts`, fields);
+      ? await axios.patch(`http://localhost:4444/posts/${id}`, fields)
+      : await axios.post(`http://localhost:4444/posts`, fields);
       const _id = isEditing ? id  : data._id;
       navigate(`/posts/${_id}`)
     } catch(err) {
@@ -68,17 +70,17 @@ export const AddPost = () => {
     
     React.useEffect(() => {
       if(id) {
-         axios.get(`${process.env.REACT_APP_API_URL}/posts/${id}`).then(({data}) => {
+         axios.get(`http://localhost:4444/posts/${id}`).then(({data}) => {
           setTitle(data.title);
           setText(data.text);
           setImageUrl(data.imageUrl);
-          setTags(data.tags.join(','))
+          setTags(Array.isArray(data.tags) ? data.tags.join(',') : '');
         }).catch(error => {
           console.warn(error);
           alert('Ошибка при получении статьи');
         })
         }
-    },[])
+    },[id])
 
   const options = React.useMemo(
     () => ({
@@ -99,7 +101,6 @@ export const AddPost = () => {
       <Navigate to='/' />
     ) 
   }
-  console.log({title, tags, text});
 
   return (
     <Paper style={{ padding: 30 }}>
@@ -112,7 +113,7 @@ export const AddPost = () => {
         <Button variant="contained" color="error" onClick={onClickRemoveImage}>
           Удалить
         </Button>
-         <img className={styles.image}  src={`${process.env.REACT_APP_API_URL}${imageUrl}`} alt="Uploaded" />
+         <img className={styles.image}  src={`http://localhost:4444${imageUrl}`} alt="Uploaded" />
         </>
       )}
       <br />

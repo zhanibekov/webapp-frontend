@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Link} from 'react-router-dom'
 import clsx from 'clsx';
 import { useDispatch } from 'react-redux';
@@ -7,11 +7,14 @@ import DeleteIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
 import EyeIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
 import { fetchRemovePosts } from '../../redux/slices/Posts';
+
+
+
+
 
 export const Post = ({
   id,
@@ -26,7 +29,21 @@ export const Post = ({
   isFullPost,
   isLoading,
   isEditable,
-}) => {
+},) => {
+  console.log({
+    id,
+    title,
+    createdAt,
+    imageUrl,
+    user,
+    viewsCount,
+    commentsCount,
+    tags,
+    children,
+    isFullPost,
+    isLoading,
+    isEditable,
+  }); // Вывод всех props в консоль
   const dispatch = useDispatch();
   if (isLoading) {
     return <PostSkeleton />;
@@ -36,6 +53,7 @@ export const Post = ({
     }
     dispatch(fetchRemovePosts(id));
   };
+
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
@@ -71,6 +89,7 @@ export const Post = ({
             </li>
                 ))}
           </ul>
+
           {children && <div className={styles.content}>{children}</div>}
           <ul className={styles.postDetails}>
             <li>

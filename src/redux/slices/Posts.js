@@ -1,17 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async() => {
-    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/posts`);
+    const { data } = await axios.get(`http://localhost:4444/posts`);
     return data;
 })
 
 export const fetchTags = createAsyncThunk('posts/fetchTags', async() => {
-    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/tags`);
+    const { data } = await axios.get(`http://localhost:4444/tags`);
     return data;
 })
 
 export const fetchRemovePosts = createAsyncThunk('posts/fetchRemovePosts', async(id) => {
-    const { data } = await axios.delete(`${process.env.REACT_APP_API_URL}/posts/${id}`);
+    const { data } = await axios.delete(`http://localhost:4444/posts/${id}`);
     return data;
 })
 
@@ -65,7 +65,7 @@ const postsSlice = createSlice({
         },
         ///Удаление статей
         [fetchRemovePosts.pending]: (state, action) => {
-            state.posts.items = state.posts.items.filter(obj => obj._id != action.meta.arg);
+            state.posts.items = state.posts.items.filter(obj => obj._id !== action.meta.arg);
         }
     }
 });

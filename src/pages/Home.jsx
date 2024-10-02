@@ -5,23 +5,25 @@ import Grid from '@mui/material/Grid';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchPosts } from '../redux/slices/Posts';
-import { fetchTags } from '../redux/slices/Posts';
+import { useDispatch, useSelector} from 'react-redux';
+import { fetchPosts, fetchTags } from '../redux/slices/Posts';
+
 export const Home = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
-  const {posts, tags} = useSelector((state) => state.posts);
-  
+  const { posts, tags } = useSelector((state) => state.posts);
+
   const isPostsLoading = posts.status === 'loading';
   const isTagsLoading = tags.status === 'loading';
 
+  
 
-  React.useEffect(() => {       ///Запрос и ответ на сервер////
-      dispatch(fetchPosts(fetchPosts()));
-      dispatch(fetchTags());
+  React.useEffect(() => {
+    console.log('Вызов ft')
+    dispatch(fetchPosts());
+    dispatch(fetchTags());
   }, [dispatch]);
-  console.log(posts);
+
   return (
     <>
       <Tabs style={{ marginBottom: 15 }} value={0} aria-label="basic tabs example">
@@ -29,25 +31,31 @@ export const Home = () => {
         <Tab label="Популярные" />
       </Tabs>
       <Grid container spacing={4}>
-        <Grid xs={8} item>
-          {( isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) => isPostsLoading ? (
-          <Post key={index} isLoading={true} />
-          ):(
-            <Post
-              id={obj._id}
-              title={obj.title}
-              imageUrl={obj.imageUrl ? `${process.env.REACT_APP_API_URL}${obj.imageUrl}` : ''}
-              user={obj.user}
-              createdAt={obj.createdAt}
-              viewsCount={obj.viewsCount}
-              commentsCount={obj.commentsCount}
-              tags={obj.tags}
-             
-            />
+      <Grid item xs={8}>
+          {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) => (
+            <React.Fragment key={index}>
+              {isPostsLoading ? (
+                <Post isLoading={true} />
+              ) : (
+                <Post
+                id={obj?._id} // Использование optional chaining
+                title={obj?.title}
+                imageUrl={obj?.imageUrl ? `http://localhost:4444${obj.imageUrl}` : ''}
+                user={obj?.user}
+                createdAt={obj?.createdAt}
+                viewsCount={obj?.viewsCount}
+                commentsCount={3}
+                tags={obj?.tags}
+                isEditable={userData?._id === obj?.user?._id}
+                />
+              )}
+            </React.Fragment>
           ))}
         </Grid>
+
         <Grid xs={4} item>
-          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
+          <TagsBlock items={tags.items || []} isLoading={isTagsLoading} />
+
           <CommentsBlock
             items={[
               {
@@ -71,6 +79,4 @@ export const Home = () => {
       </Grid>
     </>
   );
- 
 };
-

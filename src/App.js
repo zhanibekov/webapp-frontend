@@ -40,8 +40,8 @@ function App() {
         /> <
         Route path = "/register"
         element = { < Registration / > }
-        />  <
-        /Routes >  <
+        />  < /
+        Routes > <
         /Container> </ >
     );
 }

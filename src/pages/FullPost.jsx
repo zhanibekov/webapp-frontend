@@ -10,10 +10,12 @@ export const FullPost = () => {
   const [data, setData] = React.useState();
   const [isLoading, setLoading] = React.useState(true);
 
+
+
   const { id } = useParams();
 
   React.useEffect(() =>{       /////Когда запрос выполнился сохраняем его в state//////
-    axios.get(`/posts/${id}`).then(res => {
+    axios.get(`http://localhost:4444/posts/${id}`).then(res => {
       setData(res.data);
       setLoading(false);
     }).catch(err => {
@@ -32,7 +34,7 @@ export const FullPost = () => {
       <Post
          id={data._id}
          title={data.title}
-         imageUrl={ data.imageUrl ? `${process.env.REACT_APP_API_URL}${data.imageUrl}` : ''}
+         imageUrl={ data.imageUrl}
          // imageUrl="https://res.cloudinary.com/practicaldev/image/fetch/s--UnAfrEG8--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/icohm5g0axh9wjmu4oc3.png"
          user={data.user}
          createdAt={data.createdAt}
